@@ -6,10 +6,17 @@ before_install:
   - docker build -t ovidiupost/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run ovidiupost/react-test npm run test -- --coverage
+  - docker run -e CI=true ovidiupost/react-test npm run test
 
 after_success:
   - docker build -t ovidiupost/multi-client ./client
   - docker build -t ovidiupost/multi-nginx ./nginx
   - docker build -t ovidiupost/multi-server ./server
   - docker build -t ovidiupost/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push ovidiupost/multi-client
+  - docker push ovidiupost/multi-nginx
+  - docker push ovidiupost/multi-server
+  - docker push ovidiupost/multi-worker

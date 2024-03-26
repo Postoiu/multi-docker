@@ -20,3 +20,13 @@ after_success:
   - docker push ovidiupost/multi-nginx
   - docker push ovidiupost/multi-server
   - docker push ovidiupost/multi-worker
+
+deploy:
+  provider: elsticbeanstalk
+  region: "eu-central-1"
+  app: "multi-docker"
+  env: "Multi-docker-env"
+  bucket_name: "elasticbeanstalk-eu-central-1-829325965420"
+  bucket_path: "docker-multi"
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: "$AWS_SECRET_KEY"

@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t ovidiupost/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run ovidiupost/react-test npm run test -- --coverage
+
+after_success:
+  - docker build -t ovidiupost/multi-client ./client
+  - docker build -t ovidiupost/multi-nginx ./nginx
+  - docker build -t ovidiupost/multi-server ./server
+  - docker build -t ovidiupost/multi-worker ./worker
